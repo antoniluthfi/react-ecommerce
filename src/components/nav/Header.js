@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { Menu } from 'antd';
 import { 
-    HomeOutlined, 
-    SettingOutlined,
+    HomeOutlined,
     UserOutlined,
     UserAddOutlined
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
-const { SubMenu, Item } = Menu;
+const { Item } = Menu;
 
 const Header = () => {
     const [current, setCurrent] = useState('home');
