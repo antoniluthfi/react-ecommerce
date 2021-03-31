@@ -1,5 +1,4 @@
 import React from 'react';
-import { ToastContainer } from 'react-toastify';
 import AuthHelper from './AuthHelper';
 
 const Register = () => {
@@ -28,7 +27,6 @@ const Register = () => {
         <div className="container p-5">
             <div className="row">
                 <div className="col-md-6 offset-md-3">
-                    <ToastContainer />
                     <h4>Register</h4>
                     {registerForm()}
                 </div>
