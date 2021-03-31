@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { ToastContainer } from 'react-toastify';
 import AuthHelper from './AuthHelper';
 
 const Register = () => {
-    const [email, setEmail] = useState('');
-
     const {
+        input, setInput,
         registerHandleSubmit
     } = AuthHelper();
 
@@ -13,8 +13,10 @@ const Register = () => {
             <input 
                 type="email" 
                 className="form-control" 
-                value={email} 
-                onChange={e => setEmail(e.target.value)} 
+                value={input.email} 
+                onChange={e => setInput({
+                    ...input, email: e.target.value
+                })} 
                 autoFocus
             />
 
@@ -26,6 +28,7 @@ const Register = () => {
         <div className="container p-5">
             <div className="row">
                 <div className="col-md-6 offset-md-3">
+                    <ToastContainer />
                     <h4>Register</h4>
                     {registerForm()}
                 </div>
