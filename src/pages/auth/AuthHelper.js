@@ -3,6 +3,8 @@ import { auth } from '../../firebase';
 import { toast } from 'react-toastify';
 
 const AuthHelper = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [route, setRoute] = useState('/');
     const [input, setInput] = useState({
         email: '',
         password: ''
@@ -39,9 +41,50 @@ const AuthHelper = () => {
         });
     }
 
+    const completeRegisterHandleSubmit = async e => {
+        e.preventDefault();
+
+        let message = null;
+        if(!input.email) message = 'Email is required!';
+        else if(!input.password) message = 'Password is required!';
+
+        if(message) {
+            toast.error(message);
+            return;
+        }
+
+        try {
+            const result = await auth.signInWithEmailLink(input.email, window.location.href);
+
+            if(result.user.emailVerified) {
+                setIsLoggedIn(true);
+
+                // remove user email from localStorage
+                localStorage.removeItem('email-for-registration');
+
+                // update user password get user id token
+                let user = auth.currentUser;
+                await user.updatePassword(input.password);
+                const idTokenResult = await user.getIdTokenResult();
+
+                // redux store
+                console.log('user', user);
+                console.log('idTokenResult', idTokenResult);
+
+                // redirect
+                setRoute('/login');
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    }
+
     return {
+        route, 
+        isLoggedIn,
         input, setInput,
         registerHandleSubmit, 
+        completeRegisterHandleSubmit
     }
 }
 

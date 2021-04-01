@@ -13,7 +13,7 @@ import Header from './components/nav/Header';
 const  App = () => {
   return (
     <>
-      <ToastContainer />
+      <ToastContainer hideProgressBar />
       <Header/>
       <Switch>
         <Route path='/' exact component={Home} />

@@ -1,14 +1,17 @@
 import React, { useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import AuthHelper from './AuthHelper';
 
 const RegisterComplete = () => {
     const {
+        route, 
+        isLoggedIn,
         input, setInput,
-        registerHandleSubmit
+        completeRegisterHandleSubmit
     } = AuthHelper();
 
     const registerForm = () => (
-        <form onSubmit={registerHandleSubmit}>
+        <form onSubmit={completeRegisterHandleSubmit}>
             <input 
                 type="email" 
                 className="form-control" 
@@ -40,6 +43,7 @@ const RegisterComplete = () => {
 
     return (
         <div className="container p-5">
+            {localStorage.getItem('email-for-registration') || !isLoggedIn ? null : <Redirect to={route} />}
             <div className="row">
                 <div className="col-md-6 offset-md-3">
                     <h4>Complete Registration</h4>
