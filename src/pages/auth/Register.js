@@ -16,6 +16,7 @@ const Register = () => {
                 onChange={e => setInput({
                     ...input, email: e.target.value
                 })} 
+                placeholder="Insert Email Address"
                 autoFocus
             />
 

@@ -4,7 +4,8 @@ import { toast } from 'react-toastify';
 
 const AuthHelper = () => {
     const [input, setInput] = useState({
-        email: ''
+        email: '',
+        password: ''
     });
 
     const registerHandleSubmit = async e => {
@@ -15,13 +16,19 @@ const AuthHelper = () => {
             handleCodeInApp: true
         }
 
-        // send auth to firebase
-        await auth.sendSignInLinkToEmail(input.email, config);
-
-        // send notification
-        toast.success(
-            `Email is sent to ${input.email}. Click the given link to complete your registration.`
-        );
+        if(input.email != '') {
+            // send auth to firebase
+            await auth.sendSignInLinkToEmail(input.email, config);
+    
+            // send notification
+            toast.success(
+                `Email is sent to ${input.email}. Click the given link to complete your registration.`
+            );
+        } else {
+            toast.error(
+                'Email can not be empty!'
+            );
+        }
 
         // set email to localStorage in order the user won't be asked email again for verification
         localStorage.setItem('email-for-registration', input.email);
