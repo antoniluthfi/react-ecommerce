@@ -1,15 +1,17 @@
 import React from 'react';
 import AuthHelper from './AuthHelper';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { Button } from 'antd';
-import { LoginOutlined } from '@ant-design/icons';
+import { LoginOutlined, GoogleOutlined } from '@ant-design/icons';
 
 const Login = () => {
     const {
         input, setInput,
         isLoggedIn,
+        loading,
         route,
-        loginHandleSubmit
+        loginHandleSubmit,
+        googleLogin
     } = AuthHelper();
 
     const loginForm = () => (
@@ -41,7 +43,7 @@ const Login = () => {
 
             <Button 
                 type="primary" 
-                className="mb-3 mt-3"
+                className="mb-0 mt-3"
                 block
                 shape="round"
                 icon={<LoginOutlined />}
@@ -57,8 +59,20 @@ const Login = () => {
             {!isLoggedIn ? null : <Redirect to={route} />}
             <div className="row">
                 <div className="col-md-6 offset-md-3">
-                    <h4>Login</h4>
+                    {loading ? <h4 className="text-danger">Loading...</h4> : <h4>Login</h4>}
                     {loginForm()}
+
+                    <Button 
+                        type="danger" 
+                        className="mb-3 mt-0"
+                        block
+                        shape="round"
+                        icon={<GoogleOutlined />}
+                        size="large"
+                        onClick={googleLogin}
+                    >Login with google</Button>
+
+                    <Link to="/forgot-password" className="float-right text-danger">Forgot Password</Link>
                 </div>
             </div>
         </div>

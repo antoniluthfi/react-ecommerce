@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { auth } from '../../firebase';
+import { auth, googleAuthProvider } from '../../firebase';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 
@@ -101,9 +101,56 @@ const AuthHelper = () => {
             setIsLoggedIn(true);
             setRoute('/');
         } catch (error) {
-            toast.error(error);
+            toast.error(error.message);
             setLoading(false);
         }
+    }
+
+    const googleLogin = async () => {
+        await auth.signInWithPopup(googleAuthProvider)
+            .then(async result => {
+                const { user } = result;
+                const idTokenResult = await user.getIdTokenResult();
+
+                dispatch({
+                    type: 'LOGGED_IN_USER',
+                    payload: {
+                        email: user.email, 
+                        token: idTokenResult.token
+                    }
+                });    
+
+                setIsLoggedIn(true);
+                setRoute('/');    
+            })
+            .catch(error => {
+                toast.error(error.message);
+                setLoading(false);
+            });
+    }
+
+    const forgotPasswordHandleSubmit = async e => {
+        e.preventDefault();
+        setLoading(true);
+
+        const config = {
+            url: process.env.REACT_APP_FORGOT_PASSWORD_REDIRECT_URL,
+            handleCodeInApp: true
+        }
+
+        await auth.sendPasswordResetEmail(input.email, config)
+            .then(() => {
+                setInput({
+                    ...input, email: ''
+                });
+
+                setLoading(false);
+                toast.success(`Email has been sent to ${input.email}`);
+            })
+            .catch(error => {
+                setLoading(false);
+                toast.error(error.message);
+            });
     }
 
     return {
@@ -114,6 +161,8 @@ const AuthHelper = () => {
         registerHandleSubmit, 
         completeRegisterHandleSubmit,
         loginHandleSubmit,
+        googleLogin,
+        forgotPasswordHandleSubmit,
     }
 }
 
