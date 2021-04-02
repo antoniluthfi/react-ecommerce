@@ -1,5 +1,7 @@
 import React from 'react';
 import AuthHelper from './AuthHelper';
+import { Button } from 'antd';
+import { LoginOutlined } from '@ant-design/icons';
 
 const Register = () => {
     const {
@@ -8,7 +10,7 @@ const Register = () => {
     } = AuthHelper();
 
     const registerForm = () => (
-        <form onSubmit={registerHandleSubmit}>
+        <form>
             <input 
                 type="email" 
                 className="form-control" 
@@ -20,7 +22,16 @@ const Register = () => {
                 autoFocus
             />
 
-            <button type="submit" className="btn btn-raised mt-3">REGISTER</button>
+            <Button 
+                type="primary" 
+                className="mb-3 mt-3"
+                block
+                shape="round"
+                icon={<LoginOutlined />}
+                size="large"
+                onClick={registerHandleSubmit}
+                disabled={!input.email}
+            >Register</Button>
         </form>
     );
 

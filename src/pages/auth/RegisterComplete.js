@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import AuthHelper from './AuthHelper';
+import { Button } from 'antd';
+import { LoginOutlined } from '@ant-design/icons';
 
 const RegisterComplete = () => {
     const {
@@ -11,27 +13,40 @@ const RegisterComplete = () => {
     } = AuthHelper();
 
     const registerForm = () => (
-        <form onSubmit={completeRegisterHandleSubmit}>
-            <input 
-                type="email" 
-                className="form-control" 
-                value={input.email} 
-                placeholder="Insert Email Address"
-                disabled
-            />
+        <form>
+            <div className="form-group">
+                <input 
+                    type="email" 
+                    className="form-control" 
+                    value={input.email} 
+                    placeholder="Insert Email Address"
+                    disabled
+                />
+            </div>
 
-            <input 
-                type="password" 
-                className="form-control" 
-                value={input.password} 
-                onChange={e => setInput({
-                    ...input, password: e.target.value
-                })} 
-                placeholder="Insert Password"
-                autoFocus
-            />
+            <div classNam="form-group">
+                <input 
+                    type="password" 
+                    className="form-control" 
+                    value={input.password} 
+                    onChange={e => setInput({
+                        ...input, password: e.target.value
+                    })} 
+                    placeholder="Insert Password"
+                    autoFocus
+                />
+            </div>
 
-            <button type="submit" className="btn btn-raised mt-3">Complete Registration</button>
+            <Button 
+                type="primary" 
+                className="mb-3 mt-3"
+                block
+                shape="round"
+                icon={<LoginOutlined />}
+                size="large"
+                onClick={completeRegisterHandleSubmit}
+                disabled={!input.email || !input.password}
+            >Complete Registration</Button>
         </form>
     );
 

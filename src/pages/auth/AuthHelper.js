@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { auth } from '../../firebase';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 
 const AuthHelper = () => {
+    const dispatch = useDispatch();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [route, setRoute] = useState('/');
+    const [loading, setLoading] = useState(false);
     const [input, setInput] = useState({
         email: '',
         password: ''
@@ -79,12 +82,38 @@ const AuthHelper = () => {
         }
     }
 
+    const loginHandleSubmit = async e => {
+        e.preventDefault();
+        setLoading(true);
+
+        try {
+            const result = await auth.signInWithEmailAndPassword(input.email, input.password);
+            const { user } = result;
+            const idTokenResult = await user.getIdTokenResult();
+
+            dispatch({
+                type: 'LOGGED_IN_USER',
+                payload: {
+                    email: user.email, 
+                    token: idTokenResult.token
+                }
+            });
+            setIsLoggedIn(true);
+            setRoute('/');
+        } catch (error) {
+            toast.error(error);
+            setLoading(false);
+        }
+    }
+
     return {
         route, 
         isLoggedIn,
+        loading,
         input, setInput,
         registerHandleSubmit, 
-        completeRegisterHandleSubmit
+        completeRegisterHandleSubmit,
+        loginHandleSubmit,
     }
 }
 
