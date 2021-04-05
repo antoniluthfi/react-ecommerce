@@ -58,7 +58,7 @@ const RegisterComplete = () => {
 
     return (
         <div className="container p-5">
-            {localStorage.getItem('email-for-registration') || !isLoggedIn ? null : <Redirect to={route} />}
+            {!isLoggedIn ? null : <Redirect to={route} />}
             <div className="row">
                 <div className="col-md-6 offset-md-3">
                     <h4>Complete Registration</h4>

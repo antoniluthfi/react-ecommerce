@@ -30,7 +30,7 @@ const AuthHelper = () => {
             handleCodeInApp: true
         }
 
-        if(input.email != '') {
+        if(input.email !== '') {
             // send auth to firebase
             await auth.sendSignInLinkToEmail(input.email, config);
     
@@ -79,12 +79,22 @@ const AuthHelper = () => {
                 await user.updatePassword(input.password);
                 const idTokenResult = await user.getIdTokenResult();
 
-                // redux store
-                console.log('user', user);
-                console.log('idTokenResult', idTokenResult);
-
-                // redirect
-                setRoute('/login');
+                createOrUpdateUser(idTokenResult.token)
+                    .then(res => {
+                        dispatch({
+                            type: 'LOGGED_IN_USER',
+                            payload: {
+                                _id: res.data._id,
+                                name: res.data.name,
+                                email: res.data.email, 
+                                role: res.data.role,
+                                token: idTokenResult.token
+                            }
+                        });
+                        setIsLoggedIn(true);
+                        setRoute('/');
+                    })
+                    .catch();
             }
         } catch (error) {
             toast.error(error.message);
@@ -101,18 +111,21 @@ const AuthHelper = () => {
             const idTokenResult = await user.getIdTokenResult();
 
             createOrUpdateUser(idTokenResult.token)
-                .then(res => console.log(res))
+                .then(res => {
+                    dispatch({
+                        type: 'LOGGED_IN_USER',
+                        payload: {
+                            _id: res.data._id,
+                            name: res.data.name,
+                            email: res.data.email, 
+                            role: res.data.role,
+                            token: idTokenResult.token
+                        }
+                    });
+                    setIsLoggedIn(true);
+                    setRoute('/');
+                })
                 .catch();
-
-            // dispatch({
-            //     type: 'LOGGED_IN_USER',
-            //     payload: {
-            //         email: user.email, 
-            //         token: idTokenResult.token
-            //     }
-            // });
-            // setIsLoggedIn(true);
-            // setRoute('/');
         } catch (error) {
             toast.error(error.message);
             setLoading(false);
@@ -125,16 +138,22 @@ const AuthHelper = () => {
                 const { user } = result;
                 const idTokenResult = await user.getIdTokenResult();
 
-                dispatch({
-                    type: 'LOGGED_IN_USER',
-                    payload: {
-                        email: user.email, 
-                        token: idTokenResult.token
-                    }
-                });    
-
-                setIsLoggedIn(true);
-                setRoute('/');    
+                createOrUpdateUser(idTokenResult.token)
+                .then(res => {
+                    dispatch({
+                        type: 'LOGGED_IN_USER',
+                        payload: {
+                            _id: res.data._id,
+                            name: res.data.name,
+                            email: res.data.email, 
+                            role: res.data.role,
+                            token: idTokenResult.token
+                        }
+                    });
+                    setIsLoggedIn(true);
+                    setRoute('/');
+                })
+                .catch();
             })
             .catch(error => {
                 toast.error(error.message);

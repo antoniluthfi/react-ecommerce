@@ -1,6 +1,5 @@
 import React from 'react';
 import AuthHelper from './AuthHelper';
-import { Redirect, Link } from 'react-router-dom';
 import { Button } from 'antd';
 import { LoginOutlined } from '@ant-design/icons';
 
