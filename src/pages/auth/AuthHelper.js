@@ -2,6 +2,15 @@ import { useState } from 'react';
 import { auth, googleAuthProvider } from '../../firebase';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
+
+const createOrUpdateUser = async authtoken => {
+    return await axios.post(`${process.env.REACT_APP_API}/create-or-update-user`, {}, {
+        headers: {
+            authtoken
+        }
+    });
+}
 
 const AuthHelper = () => {
     const dispatch = useDispatch();
@@ -91,15 +100,19 @@ const AuthHelper = () => {
             const { user } = result;
             const idTokenResult = await user.getIdTokenResult();
 
-            dispatch({
-                type: 'LOGGED_IN_USER',
-                payload: {
-                    email: user.email, 
-                    token: idTokenResult.token
-                }
-            });
-            setIsLoggedIn(true);
-            setRoute('/');
+            createOrUpdateUser(idTokenResult.token)
+                .then(res => console.log(res))
+                .catch();
+
+            // dispatch({
+            //     type: 'LOGGED_IN_USER',
+            //     payload: {
+            //         email: user.email, 
+            //         token: idTokenResult.token
+            //     }
+            // });
+            // setIsLoggedIn(true);
+            // setRoute('/');
         } catch (error) {
             toast.error(error.message);
             setLoading(false);
